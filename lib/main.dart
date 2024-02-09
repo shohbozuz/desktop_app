@@ -1,10 +1,10 @@
-import 'dart:async';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firstapp/Error.dart';
 import 'package:firstapp/Home.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -30,13 +30,8 @@ class _MyAppState extends State<MyApp> {
     var deviceData = <String, dynamic>{};
 
     try {
-      if (kIsWeb) {
-        deviceData = <String, dynamic>{
-          'Error:': 'Web platform is not supported',
-        };
-      } else {
-        deviceData = _readWindowsDeviceInfo(await deviceInfoPlugin.windowsInfo);
-      }
+      final WindowsDeviceInfo windowsInfo = await deviceInfoPlugin.windowsInfo;
+      deviceData = _readWindowsDeviceInfo(windowsInfo);
     } on PlatformException catch (e) {
       deviceData = <String, dynamic>{
         'Error:': 'Failed to get platform version. ${e.message}'
@@ -60,7 +55,7 @@ class _MyAppState extends State<MyApp> {
     };
   }
 
-  String men_bergan_device_id = "{AF12A3CB-62B8-4C67-A2CD-3369B24F5F1D}";
+  String men_bergan_device_id = "{337B43BA-6FA8-42EE-87E1-DF8E59399650}";
 
   @override
   Widget build(BuildContext context) {
@@ -70,17 +65,11 @@ class _MyAppState extends State<MyApp> {
         colorSchemeSeed: const Color(0x9f4376f8),
       ),
       home: Scaffold(
-        body: (() {
-          if (_deviceData != null &&
-              _deviceData['deviceId'] == men_bergan_device_id) {
-            return Home(deviceData: _deviceData);
-          } else {
-            return BoshqaWindows();
-          }
-        })(),
+        body: _deviceData != null &&
+                _deviceData['deviceId'] == men_bergan_device_id
+            ? Home(deviceData: _deviceData)
+            : BoshqaWindows(deviceData: _deviceData),
       ),
     );
   }
 }
-
-

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class BoshqaWindows extends StatelessWidget {
-  const BoshqaWindows({super.key});
+  final Map<String, dynamic> deviceData;
+
+  const BoshqaWindows({Key? key, required this.deviceData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,8 +12,18 @@ class BoshqaWindows extends StatelessWidget {
         title: Text("Nomalum windows"),
       ),
       body: Center(
-        child: Text(
-            "Diqqat nomalum windows. Agar kursni sotib olmoqchi bo'lsangiz  +998971712402 ga tel qilib sotib olin"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Diqqat nomalum windows. Agar kursni sotib olmoqchi bo'lsangiz +998971712402 ga tel qilib sotib olin",
+            ),
+            SizedBox(height: 20),
+            // BoshqaWindows widgetida ma'lumotlarni chiqarish
+            Text("Sizning Device ID: ${deviceData['deviceId']}"),
+            Text("Sizning Computer Name: ${deviceData['computerName']}"),
+          ],
+        ),
       ),
     );
   }
