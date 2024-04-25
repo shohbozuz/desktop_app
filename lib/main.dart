@@ -1,9 +1,9 @@
-import 'package:firstapp/Error.dart';
-import 'package:firstapp/Home.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
+
+import 'Error.dart';
+import 'Home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,8 +30,13 @@ class _MyAppState extends State<MyApp> {
     var deviceData = <String, dynamic>{};
 
     try {
-      final WindowsDeviceInfo windowsInfo = await deviceInfoPlugin.windowsInfo;
-      deviceData = _readWindowsDeviceInfo(windowsInfo);
+      if (Theme.of(context).platform == TargetPlatform.android) {
+        final AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
+        deviceData = _readAndroidBuildData(androidInfo);
+      } else if (Theme.of(context).platform == TargetPlatform.windows) {
+        final WindowsDeviceInfo windowsInfo = await deviceInfoPlugin.windowsInfo;
+        deviceData = _readWindowsDeviceInfo(windowsInfo);
+      }
     } on PlatformException catch (e) {
       deviceData = <String, dynamic>{
         'Error:': 'Failed to get platform version. ${e.message}'
@@ -44,18 +49,28 @@ class _MyAppState extends State<MyApp> {
       _deviceData = deviceData;
     });
 
-    print("Device ID: ${_deviceData['deviceId']}");
-    print("Computer Name: ${_deviceData['computerName']}");
+    print("Android Brand: ${_deviceData['androidBrand']}");
+    print("Android ID: ${_deviceData['androidId']}");
+  }
+
+  Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo data) {
+    return <String, dynamic>{
+      'androidBrand': data.brand,
+      'androidId': data.id,
+      // Add other Android-specific data here as needed
+    };
   }
 
   Map<String, dynamic> _readWindowsDeviceInfo(WindowsDeviceInfo data) {
     return <String, dynamic>{
       'deviceId': data.deviceId,
       'computerName': data.computerName,
+      // Add other Windows-specific data here as needed
     };
   }
 
-  String men_bergan_device_id = "{337B43BA-6FA8-42EE-87E1-DF8E59399650}";
+  String men_bergan_windows_device_id = "{sB9EF1387-FF7A-4F3D-A838-EC8F01355536}";
+  String men_bergan_andoid_id = "UKQ1.230917.001";
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +80,12 @@ class _MyAppState extends State<MyApp> {
         colorSchemeSeed: const Color(0x9f4376f8),
       ),
       home: Scaffold(
-        body: _deviceData != null &&
-                _deviceData['deviceId'] == men_bergan_device_id
+        body: (_deviceData.containsKey('androidId') &&
+                _deviceData['androidId'] == men_bergan_andoid_id &&
+                Theme.of(context).platform == TargetPlatform.android ||
+                _deviceData.containsKey('deviceId') &&
+                    _deviceData['deviceId'] == men_bergan_windows_device_id &&
+                    Theme.of(context).platform == TargetPlatform.windows)
             ? Home(deviceData: _deviceData)
             : BoshqaWindows(deviceData: _deviceData),
       ),

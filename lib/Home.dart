@@ -9,19 +9,31 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tanlangan windows"),
+        title: Text(Theme.of(context).platform == TargetPlatform.android
+            ? "Tanlangan Android"
+            : "Tanlangan Windows"),
       ),
       body: Column(
         children: [
           Center(
             child: Text("Bu yerda kurslar bo'ladi"),
           ),
-          Center(
-            child: Text("Device id ${deviceData['deviceId']}"),
-          ),
-          Center(
-            child: Text("Device id ${deviceData['computerName']}"),
-          ),
+          if (Theme.of(context).platform == TargetPlatform.android)
+            Center(
+              child: Text("Andoid id ${deviceData['androidId']}"),
+            ),
+          if (Theme.of(context).platform == TargetPlatform.android)
+            Center(
+              child: Text("Andoid Brand ${deviceData['androidBrand']}"),
+            ),
+          if (Theme.of(context).platform == TargetPlatform.windows)
+            Center(
+              child: Text("Device id ${deviceData['deviceId']}"),
+            ),
+          if (Theme.of(context).platform == TargetPlatform.windows)
+            Center(
+              child: Text("Computer Name ${deviceData['computerName']}"),
+            ),
         ],
       ),
     );

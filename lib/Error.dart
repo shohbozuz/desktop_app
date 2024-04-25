@@ -11,19 +11,30 @@ class BoshqaWindows extends StatelessWidget {
       appBar: AppBar(
         title: Text("Nomalum windows"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Diqqat nomalum windows. Agar kursni sotib olmoqchi bo'lsangiz +998971712402 ga tel qilib sotib olin",
+      body: Column(
+        children: [
+          Center(
+            child:  Text(
+              "Diqqat nomalum Qurilma. Agar kursni sotib olmoqchi bo'lsangiz +998971712402 ga tel qilib sotib olin",
             ),
-            SizedBox(height: 20),
-            // BoshqaWindows widgetida ma'lumotlarni chiqarish
-            Text("Sizning Device ID: ${deviceData['deviceId']}"),
-            Text("Sizning Computer Name: ${deviceData['computerName']}"),
-          ],
-        ),
+          ),
+          if (Theme.of(context).platform == TargetPlatform.android)
+            Center(
+              child: Text("Andoid id ${deviceData['androidId']}"),
+            ),
+          if (Theme.of(context).platform == TargetPlatform.android)
+            Center(
+              child: Text("Andoid Brand ${deviceData['androidBrand']}"),
+            ),
+          if (Theme.of(context).platform == TargetPlatform.windows)
+            Center(
+              child: Text("Device id ${deviceData['deviceId']}"),
+            ),
+          if (Theme.of(context).platform == TargetPlatform.windows)
+            Center(
+              child: Text("Computer Name ${deviceData['computerName']}"),
+            ),
+        ],
       ),
     );
   }
